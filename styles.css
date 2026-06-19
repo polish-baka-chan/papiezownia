@@ -3,26 +3,41 @@
 html,body{height:100%}
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:#000;overflow:hidden;color:#fff}
 
-/* Tło — pełnoekranowy element z równymi pasami kolorów tęczy obracany przez transform */
+/* Duży, centralnie ustawiony element z gradientem — zapobiega czarnym narożnikom przy obracaniu */
+.rainbow{
+  position:relative;
+}
 .rainbow::before{
   content:"";
   position:fixed;
-  inset:0;
+  left:50%;
+  top:50%;
+  /* bardzo duży obszar, żeby pokryć ekran podczas obrotu */
+  width:180vmax;
+  height:180vmax;
   z-index:0;
-  /* równe pionowe pasy kolorów tęczy */
-  background: linear-gradient(90deg,
-    red 0%, orange 14.2857%, yellow 28.5714%, lime 42.8571%, cyan 57.1428%, blue 71.4285%, magenta 85.7142%, red 100%
+  transform: translate(-50%,-50%) rotate(0deg) scale(1);
+  /* koniczny, płynny gradient tęczy */
+  background: conic-gradient(from 0deg,
+    hsl(0 100% 50%),
+    hsl(28 100% 50%),
+    hsl(56 100% 50%),
+    hsl(120 60% 50%),
+    hsl(180 90% 50%),
+    hsl(220 90% 50%),
+    hsl(280 90% 50%),
+    hsl(340 100% 50%),
+    hsl(0 100% 50%)
   );
-  transform: rotate(0deg) scale(1.15);
-  animation: spin-bg 12s linear infinite;
-  opacity:0.95;
   filter: blur(6px) saturate(120%);
+  animation: spin-bg 14s linear infinite;
+  mix-blend-mode: normal;
+  opacity:0.98;
 }
 
-/* animacja tła */
 @keyframes spin-bg{
-  from{transform: rotate(0deg) scale(1.15)}
-  to{transform: rotate(360deg) scale(1.15)}
+  from{transform: translate(-50%,-50%) rotate(0deg) scale(1)}
+  to{transform: translate(-50%,-50%) rotate(360deg) scale(1)}
 }
 
 /* Centrum strony i ramka dla zdjęcia */
@@ -35,15 +50,15 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
   padding:2rem;
 }
 
-/* Rama obrazka — jednolite tło (możesz zmienić) */
+/* Rama obrazka — jednolite tło */
 .portrait-frame{
   width: clamp(220px, 35vmin, 420px);
   height: clamp(220px, 35vmin, 420px);
   display:grid;
   place-items:center;
   border-radius:50%;
-  background: rgba(0,0,0,0.35);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5), inset 0 0 30px rgba(255,255,255,0.02);
+  background: rgba(0,0,0,0.45);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.6), inset 0 0 30px rgba(255,255,255,0.02);
   overflow:hidden;
   border: 6px solid rgba(255,255,255,0.06);
 }
@@ -56,18 +71,17 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
   display:block;
   animation: spin 8s linear infinite;
   transform-origin:center center;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.6));
+  filter: drop-shadow(0 10px 24px rgba(0,0,0,0.65));
   -webkit-user-drag: none;
   user-select: none;
 }
 
-/* Obrót zdjęcia */
 @keyframes spin{
   from{transform: rotate(0deg)}
   to{transform: rotate(360deg)}
 }
 
-/* Małe poprawki responsywne */
+/* Responsywne drobne poprawki */
 @media (max-width:420px){
-  .top-banner{top:8px;padding:0.35rem .8rem}
+  .portrait-frame{width:44vmin;height:44vmin}
 }
