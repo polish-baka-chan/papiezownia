@@ -3,47 +3,26 @@
 html,body{height:100%}
 body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:#000;overflow:hidden;color:#fff}
 
-/* Górny baner z napisem */
-.top-banner{
-  position:fixed;
-  top:12px;
-  left:50%;
-  transform:translateX(-50%);
-  z-index:5;
-  background: rgba(0,0,0,0.45);
-  color: #fff;
-  padding: 0.45rem 1rem;
-  border-radius: 999px;
-  font-weight:700;
-  letter-spacing:0.03em;
-  border:1px solid rgba(255,255,255,0.08);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.45);
-  backdrop-filter: blur(6px) saturate(120%);
-  user-select: none;
-  pointer-events: none;
-  font-size: clamp(0.9rem, 1.4vmin, 1.1rem);
-}
-
-/* Tło — pełnoekranowy element z konicznym gradientem obracanym przez transform */
+/* Tło — pełnoekranowy element z równymi pasami kolorów tęczy obracany przez transform */
 .rainbow::before{
   content:"";
   position:fixed;
   inset:0;
   z-index:0;
-  background: conic-gradient(
-    red, orange, yellow, lime, cyan, blue, magenta, red
+  /* równe pionowe pasy kolorów tęczy */
+  background: linear-gradient(90deg,
+    red 0%, orange 14.2857%, yellow 28.5714%, lime 42.8571%, cyan 57.1428%, blue 71.4285%, magenta 85.7142%, red 100%
   );
-  filter: blur(12px) saturate(120%);
-  transform: rotate(0deg) scale(1.2);
+  transform: rotate(0deg) scale(1.15);
   animation: spin-bg 12s linear infinite;
   opacity:0.95;
-  mix-blend-mode: normal;
+  filter: blur(6px) saturate(120%);
 }
 
 /* animacja tła */
 @keyframes spin-bg{
-  from{transform: rotate(0deg) scale(1.2)}
-  to{transform: rotate(360deg) scale(1.2)}
+  from{transform: rotate(0deg) scale(1.15)}
+  to{transform: rotate(360deg) scale(1.15)}
 }
 
 /* Centrum strony i ramka dla zdjęcia */
@@ -88,33 +67,7 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
   to{transform: rotate(360deg)}
 }
 
-/* Przyciski fallback (gdy autoplay zablokowane) */
-.play-button{
-  position:fixed;
-  left:50%;
-  transform:translateX(-50%);
-  bottom:6vh;
-  z-index:3;
-  background: rgba(0,0,0,0.6);
-  color:#fff;
-  border:2px solid rgba(255,255,255,0.12);
-  padding:0.8rem 1.2rem;
-  border-radius:999px;
-  font-size:1rem;
-  cursor:pointer;
-  backdrop-filter: blur(6px);
-  transition:transform .12s ease, opacity .12s ease;
-  opacity:0; /* domyślnie ukryty; skrypt pokaże gdy potrzebne */
-  pointer-events:none;
-}
-.play-button.show{
-  opacity:1;
-  pointer-events:auto;
-}
-.play-button:active{transform:translateX(-50%) scale(.98)}
-
 /* Małe poprawki responsywne */
 @media (max-width:420px){
-  .play-button{font-size:0.9rem;padding:.6rem 1rem}
   .top-banner{top:8px;padding:0.35rem .8rem}
 }

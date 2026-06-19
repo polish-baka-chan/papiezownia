@@ -1,49 +1,35 @@
-// Skrypt: próba autoodtwarzania audio, fallback przycisk i kliknięcie aby uruchomić
+// Skrypt: próba autoodtwarzania audio na otwarciu strony
+// Uwaga: przeglądarki mogą zablokować nieinteraktywne autoplay — skrypt próbuje uruchomić audio i ponowić próbę po pierwszej interakcji jeśli to konieczne.
+
 document.addEventListener("DOMContentLoaded", function () {
   const audio = document.getElementById("bg-audio");
-  const btn = document.getElementById("play-fallback");
+  if (!audio) return;
 
-  // Funkcja do próby uruchomienia audio i ukrycia przycisku jeśli się uda
+  // Spróbuj od razu odpalić audio
   function tryPlay() {
-    if (!audio) return;
-    // upewnij się, że nie jest wyciszone
+    // upewnij się, że nie jest wyciszone przez skrypt
     audio.muted = false;
     const playPromise = audio.play();
     if (playPromise !== undefined) {
       playPromise.then(() => {
-        // udane odtwarzanie
-        btn.classList.remove("show");
-        btn.setAttribute("aria-hidden", "true");
+        console.log("Audio started automatically");
       }).catch((err) => {
-        // Autoplay zablokowane — pokaż przycisk
-        console.warn("Autoplay zablokowany:", err);
-        btn.classList.add("show");
-        btn.setAttribute("aria-hidden", "false");
+        // Autoplay zablokowane — spróbuj ponowić po interakcji użytkownika (bez przycisku)
+        console.warn("Autoplay zablokowany przez przeglądarkę:", err);
+        function onFirstInteraction() {
+          audio.play().then(()=>{
+            console.log("Audio started after interaction");
+          }).catch(e=>{
+            console.error("Play after interaction failed:", e);
+          });
+          window.removeEventListener('click', onFirstInteraction);
+          window.removeEventListener('touchstart', onFirstInteraction);
+        }
+        window.addEventListener('click', onFirstInteraction, {once:true});
+        window.addEventListener('touchstart', onFirstInteraction, {once:true});
       });
     }
   }
 
-  // Jeśli przeglądarka pozwala, spróbuj uruchomić od razu
   tryPlay();
-
-  // Kliknięcie przycisku uruchamia muzykę
-  btn.addEventListener("click", function (e) {
-    e.stopPropagation();
-    audio.play().then(()=> {
-      btn.classList.remove("show");
-      btn.setAttribute("aria-hidden", "true");
-    }).catch((err)=>{
-      console.error("Błąd przy uruchamianiu audio:", err);
-    });
-  });
-
-  // Dodatkowy fallback: kliknięcie / touch anywhere uruchomi jeśli autoplay był zablokowany
-  function onFirstInteraction() {
-    tryPlay();
-    // usuwamy nasłuchy, bo chcemy to tylko raz
-    window.removeEventListener("click", onFirstInteraction);
-    window.removeEventListener("touchstart", onFirstInteraction);
-  }
-  window.addEventListener("click", onFirstInteraction, {once:true});
-  window.addEventListener("touchstart", onFirstInteraction, {once:true});
 });
