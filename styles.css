@@ -27,9 +27,9 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
   position:fixed;
   left:50%;
   top:50%;
-  /* bardzo duży obszar, żeby pokryć ekran podczas obrotu - zapas 300vmax */
-  width:300vmax;
-  height:300vmax;
+  /* BARDZO DUŻY obszar, żeby zawsze pokryć ekran podczas obrotu (znacznie większy zapas) */
+  width:500vmax;
+  height:500vmax;
   z-index:0;
   transform: translate(-50%,-50%) rotate(0deg) scale(1);
   /* koniczny, płynny gradient tęczy */
@@ -44,10 +44,11 @@ body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
     hsl(340 100% 50%),
     hsl(0 100% 50%)
   );
-  filter: blur(6px) saturate(120%);
+  /* usuń blur żeby nie pojawiały się ciemniejsze krawędzie; zostaw tylko saturację */
+  filter: saturate(130%);
   animation: spin-bg 14s linear infinite;
   mix-blend-mode: normal;
-  opacity:0.99;
+  opacity:1;
   pointer-events:none;
   will-change:transform;
 }
